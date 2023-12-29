@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://wonseo165-database-1.cdvey5izwfml.ap-northeast-2.rds.amazonaws.com:3306/db_wonseo_dev?serverTimezone=UTC&characterEncoding=UTF-8
+    username: itm_user
+    password: 'itm@6700'
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        order_inserts: true
+#        order_updates: true
+#        jdbc:
+#          batch_size: 100
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
