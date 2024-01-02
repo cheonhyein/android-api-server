@@ -28,10 +28,13 @@ data class ApiEntity (
     val tarLangType : String? = null,
 
     @Column(name = "TRANSLATED_TEXT")
-    val translatedText : String? = null,
+    val translatedText : String,
 
     @Column(name = "ENGINE_TYPE")
     val engineType : String? = null,
+
+    @Column(name = "SOURCE")
+    val source : String? = null,
 
     @Column(name = "CREATE_DATE")
     val createDate : LocalDateTime? = LocalDateTime.now()

@@ -20,7 +20,9 @@ data class ApiDto (
 
     val tarLangType : String? = null,
 
-    val translatedText : String? = null,
+    val translatedText : String,
+
+    val source : String? = null,
 
     val engineType : String? = null
 ) {
@@ -30,7 +32,8 @@ data class ApiDto (
             apiDto.srcLangType,
             apiDto.tarLangType,
             apiDto.translatedText,
-            apiDto.engineType
+            apiDto.engineType,
+            apiDto.source,
         )
     }
 }
