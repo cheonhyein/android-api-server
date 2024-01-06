@@ -1,18 +1,12 @@
 package com.api.androidapiserver.auth.jwt
 
 import com.api.androidapiserver.api.tokenstore.InMemoryTokenStore
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.micrometer.common.util.StringUtils
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
-import java.lang.RuntimeException
 import java.util.*
 
 /**
@@ -34,12 +28,17 @@ class JwtFilter(private val inMemoryTokenStore: InMemoryTokenStore, private val 
         filterChain: FilterChain
     ) {
 
-        val token = jwtProvider.getToken(request)
+        var token = jwtProvider.getToken(request)
 
-        if(jwtProvider.validateJwtToken(token) && inMemoryTokenStore.validateToken(token)) {
-            val authentication = jwtProvider.getAuthentication(token)
+        if (token != null && StringUtils.isNotEmpty(token) && token.indexOf("Bearer") > -1) {
+            val authentication = jwtProvider.getAuthentication(token.replace("Bearer ", ""))
             SecurityContextHolder.getContext().authentication = authentication
+//            if(jwtProvider.validateJwtToken(token) && inMemoryTokenStore.validateToken(token)) {
+//                val authentication = jwtProvider.getAuthentication(token)
+//                SecurityContextHolder.getContext().authentication = authentication
+//            }
         }
+
         filterChain.doFilter(request, response)
     }
 

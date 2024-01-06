@@ -1,5 +1,7 @@
 package com.api.androidapiserver.api.dto
 
+import jakarta.persistence.Column
+
 /**
  * <pre>
  *
@@ -12,7 +14,10 @@ package com.api.androidapiserver.api.dto
  */
 
 data class UserDto(
+
     val userId: String,
 
-    val password: String
+    val password: String,
+
+    val userName: String
 )

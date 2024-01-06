@@ -25,16 +25,13 @@ import java.util.stream.Collector
  * @since 1/5/24
  */
 @Service
-class WebUserDetailsService() : UserDetailsService {
-//    private val userRepository: UserRepository
-    override fun loadUserByUsername(username: String): UserDetails {
-//        var userEntity = userRepository.findByUserId(username).orElseThrow { RuntimeException("Not found User Info.") }
-        var userEntity = UserEntity("hyein", "a", "1", "천혜인","ROLE_USER,ROLE_ADMIN", LocalDateTime.now())
+class WebUserDetailsService(private val userRepository: UserRepository) : UserDetailsService {
 
-//        val authorities: List<GrantedAuthority> = Arrays.stream((userEntity).role.split(","))
-//            .map { SimpleGrantedAuthority(it) }
-//            .toList()
-        return AccountUserDetails(userEntity.userId, userEntity.password, userEntity.userName, null)
+    override fun loadUserByUsername(username: String): AccountUserDetails {
+        val userEntity = userRepository.findByUserId(username).orElseThrow { RuntimeException("Not found User Info.") }
+        val rolesList : MutableList<String> = userEntity.roles.split(",").toMutableList()
+        val authority = rolesList.map { role -> SimpleGrantedAuthority("$role") }
+        return AccountUserDetails(userEntity.userId, userEntity.password, userEntity.userName, rolesList, authority)
 
     }
 }

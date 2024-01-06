@@ -11,12 +11,15 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
@@ -36,7 +39,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-//    private val webUserDetailsService: WebUserDetailsService,
     private val inMemoryTokenStore: InMemoryTokenStore,
     private val jwtProvider: JwtProvider
 ) {
@@ -47,33 +49,26 @@ class WebSecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/api/profile/me").hasAuthority("ROLE_USER")
-                    .requestMatchers("/login, /api").permitAll()
+                    .requestMatchers("/profile/me").hasAuthority("ROLE_USER")
+                    .requestMatchers("/login", "/join").permitAll()
                     .requestMatchers("/authorize/**").authenticated()
             }
             .formLogin { login ->
                 login
-                    .loginPage("/login")
-//                    .loginProcessingUrl("/login")
-                    .successHandler(LoginHandler())
+                    .loginProcessingUrl("/login")
+                    .successHandler(LoginHandler(jwtProvider))
+                    .permitAll()
             }
             .logout { logout ->
                 logout
                     .logoutUrl("/logout")
             }
-            .addFilterBefore(JwtFilter(inMemoryTokenStore, jwtProvider), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterAfter(JwtFilter(inMemoryTokenStore, jwtProvider), UsernamePasswordAuthenticationFilter::class.java)
             .httpBasic(Customizer.withDefaults())
         return http.build()
     }
 
-//    fun userDetailsService() : UserDetailsService {
-//        return webUserDetailsService
-//    }
-
     @Bean
-    fun passwordEncoder() : PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance()
-    }
-
+    fun passwordEncoder() : PasswordEncoder = BCryptPasswordEncoder()
 
 }

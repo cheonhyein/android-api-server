@@ -2,6 +2,7 @@ package com.api.androidapiserver.auth.handler
 
 import com.api.androidapiserver.auth.jwt.JwtProvider
 import com.api.androidapiserver.auth.service.WebUserDetailsService
+import com.api.androidapiserver.auth.user.AccountUserDetails
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -19,19 +20,19 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 
 class LoginHandler(
-//    private val webUserDetailsService: WebUserDetailsService,
-//    private val jwtProvider: JwtProvider
+    private val jwtProvider: JwtProvider
 ) : AuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest?,
         response: HttpServletResponse,
-        authentication: Authentication?
+        authentication: Authentication
     ) {
-//        val userDetails = webUserDetailsService.loadUserByUsername()
-//        val token = jwtProvider.createJwtToken(userDetails.username)
-//        response.contentType = "application/json"
-//        response.writer.write("{\"token\": \"$token\"}")
-//        response.writer.flush()
+        val accountUserDetails = authentication.principal as AccountUserDetails
+
+        val token = jwtProvider.createJwtToken(accountUserDetails)
+        response.contentType = "application/json"
+        response.writer.write("{\"token\": \"$token\"}")
+        response.writer.flush()
 
         println("로그인 성공!")
     }

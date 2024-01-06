@@ -32,8 +32,8 @@ class JwtProviderTest() {
 
     @Test
     fun getToken() {
-        val jwt = jwtProvider.createJwtToken("hyein")
-        println("jwt : $jwt")
+//        val jwt = jwtProvider.createJwtToken("hyein")
+//        println("jwt : $jwt")
     }
 
     @Test

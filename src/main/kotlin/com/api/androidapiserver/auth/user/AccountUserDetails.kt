@@ -16,6 +16,15 @@ import org.springframework.security.core.userdetails.User
  * @since 1/5/24
  */
 
-class AccountUserDetails(userId : String?, password : String?, userName : String?, authorities : Collection<out GrantedAuthority>?)
+class AccountUserDetails(userId : String?, password : String?, private val userName : String, private val roles : MutableList<String>, authorities : Collection<out GrantedAuthority>?)
     : User(userId, password, authorities) {
- }
+
+        fun getRoles() : MutableList<String> {
+            return roles
+        }
+
+        fun getUserName() : String{
+            return userName
+        }
+
+    }

@@ -22,19 +22,19 @@ data class UserEntity(
 
     @Id
     @Column(name = "USER_ID", length = 36, nullable = false)
-    val userId: String? = null,
+    val userId: String,
 
     @Column(name = "COMPANY_ID", length = 36, nullable = false)
-    val companyId: String? = null,
+    val companyId: String,
 
     @Column(name = "PASSWORD", length = 255, nullable = false)
-    val password: String? = null,
+    val password: String,
 
     @Column(name = "USER_NAME", length = 100, nullable = false)
-    val userName: String? = null,
+    val userName: String,
 
-    @Column(name = "ROLE", length = 50)
-    val role : String,
+    @Column(name = "ROLES", length = 50)
+    val roles : String,
 
     @Column(name = "CREATE_DATE")
     val createDate : LocalDateTime? = LocalDateTime.now()
